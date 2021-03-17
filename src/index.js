@@ -1,18 +1,40 @@
-// <⚠️ DONT DELETE THIS ⚠️>
 const colors = ['#1abc9c', '#3498db', '#white', '#f39c12', '#e74c3c'];
-// <⚠️ /DONT DELETE THIS ⚠️>
+const h2 = document.querySelector('h2');
+
+const body = document.querySelector('body');
+
+const clock = document.querySelector('.clock-clock');
+const clockTitle = document.querySelector('.clock-title');
+const now = new Date(),
+  nowYear = now.getFullYear(),
+  nowMonth = now.getMonth(),
+  nowDate = now.getDate(),
+  nowHours = now.getHours(),
+  nowMinutes = now.getMinutes(),
+  nowSeconds = now.getSeconds(),
+  xmasDay = new Date(`${nowYear}-12-24:00:00:00+0900`),
+  newYear = new Date(`${nowYear + 1}-01-01:00:00:00+0900`),
+  arborDay = new Date(`${nowYear + 1}-01-01:00:00:00+0900`),
+  _xmasDay = xmasDay.getTime(),
+  _getTime = now.getTime(),
+  xmasDDay = _xmasDay - _getTime,
+  reminingSec = Math.floor(xmasDDay / 1000) % 60,
+  reminingMin = Math.floor(xmasDDay / 1000 / 60) % 60,
+  reminingHou = Math.floor(xmasDDay / 1000 / 60 / 60) % 24,
+  reminingDat = Math.floor(xmasDDay / 1000 / 60 / 60 / 24),
+  reminingMon = Math.floor(xmasDDay / 1000 / 60 / 60 / 24 / 30) % 365;
+
+const chooseHoliday = localStorage.getItem('chooseHoliday');
+const selectedSelect = document.querySelector(
+  `#holiday-selector option[value=${chooseHoliday}]`
+);
 
 // 4번 숙제: JavaScript localStorage와 HTML select
-const chooseHoliday = localStorage.getItem('chooseHoliday');
 function loadHoliday() {
-  const selectedSelect = document.querySelector(
-    `#holiday-selector option[value=${chooseHoliday}]`
-  );
-
   if (chooseHoliday) {
     selectedSelect.setAttribute('selected', 'selected');
     console.log('최근 선택 불러오기 완료.');
-    console.log(selectedSelect);
+    console.log(selectedSelect.innerText);
   } else {
     console.log('최근 선택을 불러올 수 없습니다.');
   }
@@ -22,6 +44,7 @@ function saveHoliday(event) {
   const currentChooseHoliday = event.target.value;
   // localStorage.removeItem('chooseHoliday');
   localStorage.setItem('chooseHoliday', currentChooseHoliday);
+  clockTitle.innerText = event.target.value;
   console.log(`변경함 : ${currentChooseHoliday}`);
 }
 
@@ -36,44 +59,32 @@ function forthHomework() {
 }
 
 // 3번 숙제: D-Day 만들기
-const clock = document.querySelector('.clock');
+function thirdHomework() {
+  if (selectedSelect) {
+    // clockTitle.innerText = selectedSelect.innerText;
+    clock.innerText = _getTime.year;
+    clock.innerText = `
+    ${xmasDay.getFullYear()}년 ${
+      xmasDay.getMonth() + 1
+    }월 ${xmasDay.getDate()}일 입니다.
 
-function thirdHomeworkTimer() {
-  const now = new Date(),
-    nowYear = now.getFullYear(),
-    nowMonth = now.getMonth(),
-    nowDate = now.getDate(),
-    nowHours = now.getHours(),
-    nowMinutes = now.getMinutes(),
-    nowSeconds = now.getSeconds();
+    지금 시간은 ${nowYear}년 ${
+      nowMonth + 1
+    }월 ${nowDate}일 ${nowHours}시 ${nowMinutes}분 ${nowSeconds}초
 
-  const xmasDay = new Date(`${nowYear}-12-24:00:00:00+0900`),
-    newYear = new Date(`${nowYear + 1}-01-01:00:00:00+0900`),
-    arborDay = new Date(`${nowYear + 1}-01-01:00:00:00+0900`),
-    _xmasDay = xmasDay.getTime(),
-    _getTime = now.getTime();
-
-  const xmasDDay = _xmasDay - _getTime;
-
-  const reminingSec = Math.floor(xmasDDay / 1000) % 60,
-    reminingMin = Math.floor(xmasDDay / 1000 / 60) % 60,
-    reminingHou = Math.floor(xmasDDay / 1000 / 60 / 60) % 24,
-    reminingDat = Math.floor(xmasDDay / 1000 / 60 / 60 / 24),
-    reminingMon = Math.floor(xmasDDay / 1000 / 60 / 60 / 24 / 30) % 365;
-
-  clock.innerText = `
-  크리스마스는 ${xmasDay.getFullYear()}년 ${xmasDay.getMonth()}월 ${xmasDay.getDate()}일 입니다.
-  
-  지금 시간은 ${nowYear}년 ${nowMonth}월 ${nowDate}일 ${nowHours}시 ${nowMinutes}분 ${nowSeconds}초
-    
-  D - day
-  크리스마스까지 ${reminingDat}일 ${reminingHou}시 ${reminingMin}분 ${reminingSec}초 남았어요.
-  ${reminingDat}일은 ${reminingMon}개월예요.`;
+    D - day
+    크리스마스까지 ${reminingDat}일 ${reminingHou}시 ${reminingMin}분 ${reminingSec}초 남았어요.
+    ${reminingDat}일은 ${reminingMon}개월 입니다.`;
+  } else {
+    clock.innerText = `지금 시간은 ${nowYear}년 ${
+      nowMonth + 1
+    }월 ${nowDate}일 ${nowHours}시 ${nowMinutes}분 ${nowSeconds}초
+      
+    D - day를 선택해주세요.`;
+  }
 }
 
 // 2번 숙제: 화면 크기 변화에 따라 배경색 바꾸기
-const body = document.querySelector('body');
-
 function changeWindowBgColor(width) {
   console.log(width);
   if (width < 800) {
@@ -87,8 +98,6 @@ function changeWindowBgColor(width) {
 }
 
 // 1번 숙제… 마우스 이벤트리스너
-const h2 = document.querySelector('h2');
-
 const superEventHandler = {
   changeMouseOver: function (e) {
     console.log(e);
@@ -128,7 +137,7 @@ function firstHomework() {
 
 function init() {
   firstHomework();
-  thirdHomeworkTimer();
+  thirdHomework();
   setInterval(thirdHomeworkTimer, 1000);
   forthHomework();
 }
